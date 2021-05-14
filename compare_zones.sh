@@ -71,7 +71,7 @@ fi
 done
 
 # Output counts
-echo "ERRORS: $ERROR_COUNT, WARNINGS: $WARN_COUNT"
+echo "${RED}ERRORS:${RESET} $ERROR_COUNT, ${YELLOW}WARNINGS:${RESET} $WARN_COUNT"
 if [[ $ERROR_COUNT -gt 0 ]]; then
 exit 1
 else
