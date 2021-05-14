@@ -10,4 +10,4 @@ ANY record will probably be different too as it includes above types in it.
 
 A MX and TXT records should be the same , if they exist - difference here means a problem !
 
-See ![Example Image](geek4unix.github.com/compare-zones/image.png?raw=true "Optional Title")
+See ![Example Image](image.png?raw=true)
