@@ -72,4 +72,8 @@ done
 
 # Output counts
 echo "ERRORS: $ERROR_COUNT, WARNINGS: $WARN_COUNT"
-
+if [[ $ERROR_COUNT -gt 0 ]]; then
+exit 1
+else
+exit 0
+fi
