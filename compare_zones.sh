@@ -30,7 +30,7 @@ RESULT_T1=$(dig $RECORD_TYPE @$T1 $ZONE +short|sort)
 RESULT_T2=$(dig $RECORD_TYPE @$T2 $ZONE +short|sort)
 
 # Make a common report
-REPORT="$T1 - $RESULT_T1\n$T2 - $RESULT_T2\n"
+REPORT="server: $T1\n- $RESULT_T1\n\nserver: $T2\n- $RESULT_T2\n"
 
 # If the results are not equal, disaply a warning, or not depending on type
 # With domain transfers you can expect SOA,NS to be different, ANY also
@@ -40,33 +40,40 @@ if [[ $RESULT_T1 != $RESULT_T2 ]];then
 
 case "${RECORD_TYPE}" in 
   SOA) 
-  echo "$RECORD_TYPE is different - examine results"
+  ERROR_LEVEL="WARN"
   WARN_COUNT=$((WARN_COUNT+1))
-  echo -e ${YELLOW}${REPORT}${RESET};;
+  echo "${ERROR_LEVEL}: $RECORD_TYPE differs - examine results"
+  echo -e "${YELLOW}${REPORT}${RESET}";;
   NS) 
-  echo "$RECORD_TYPE is different - examine results"
+  ERROR_LEVEL="WARN"
   WARN_COUNT=$((WARN_COUNT+1))
-  echo -e ${YELLOW}${REPORT}${RESET};;
+  echo "${ERROR_LEVEL}: $RECORD_TYPE differs - examine results"
+  echo -e "${YELLOW}${REPORT}${RESET}";;
   ANY)
-  echo "${RECORD_TYPE} - some records are different - expected"
+  ERROR_LEVEL="WARN"
   WARN_COUNT=$((WARN_COUNT+1))
-  echo -e ${GREEN}${REPORT}${RESET};;
+  echo "${ERROR_LEVEL}: ${RECORD_TYPE} - differs - examine results" 
+  echo -e "${YELLOW}${REPORT}${RESET}";;
   A)
-  echo "${RECORD_TYPE} - differs"
+  ERROR_LEVEL="ERROR"
   ERROR_COUNT=$((ERROR_COUNT+1))
-  echo -e ${RED}${REPORT}${RESET};;
+  echo "${RECORD_TYPE} - differs"
+  echo -e "${RED}${REPORT}${RESET}";;
   MX)
-  echo "${RECORD_TYPE} - differs"
+  ERROR_LEVEL="ERROR"
   ERROR_COUNT=$((ERROR_COUNT+1))
-  echo -e ${RED}${REPORT}${RESET};;
+  echo "${ERROR_LEVEL}: ${RECORD_TYPE} - differs"
+  echo -e "${RED}${REPORT}${RESET}";;
   TXT)
-  echo "${RECORD_TYPE} - differs"
+  ERROR_LEVEL="ERROR"
   ERROR_COUNT=$((ERROR_COUNT+1))
-  echo -e ${RED}${REPORT}${RESET};;
+  echo "${ERROR_LEVEL}: ${RECORD_TYPE} - differs"
+  echo -e "${RED}${REPORT}${RESET}";;
 esac
 else
-  echo "${RECORD_TYPE}"
-  echo -e ${GREEN}${REPORT}${RESET}
+  ERROR_LEVEL="OK"
+  echo "${ERROR_LEVEL}: ${RECORD_TYPE}"
+  echo -e "${GREEN}${REPORT}${RESET}"
 fi
 done
 
