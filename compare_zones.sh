@@ -30,7 +30,7 @@ RESULT_T1=$(dig $RECORD_TYPE @$T1 $ZONE +short|sort)
 RESULT_T2=$(dig $RECORD_TYPE @$T2 $ZONE +short|sort)
 
 # Make a common report
-REPORT="server: $T1\n- $RESULT_T1\n\nserver: $T2\n- $RESULT_T2\n"
+REPORT="server: $T1\n\n$RESULT_T1\n\nserver: $T2\n\n$RESULT_T2"
 
 # If the results are not equal, disaply a warning, or not depending on type
 # With domain transfers you can expect SOA,NS to be different, ANY also
@@ -40,45 +40,45 @@ if [[ $RESULT_T1 != $RESULT_T2 ]];then
 
 case "${RECORD_TYPE}" in 
   SOA) 
-  ERROR_LEVEL="WARN"
+  ERROR_LEVEL="${YELLOW}WARN${RESET}"
   WARN_COUNT=$((WARN_COUNT+1))
-  echo "${ERROR_LEVEL}: $RECORD_TYPE differs - examine results"
+  echo "${ERROR_LEVEL}: $RECORD_TYPE record differs - examine results"
   echo -e "${YELLOW}${REPORT}${RESET}";;
   NS) 
-  ERROR_LEVEL="WARN"
+  ERROR_LEVEL="${YELLOW}WARN${RESET}"
   WARN_COUNT=$((WARN_COUNT+1))
-  echo "${ERROR_LEVEL}: $RECORD_TYPE differs - examine results"
+  echo "${ERROR_LEVEL}: $RECORD_TYPE record differs - examine results"
   echo -e "${YELLOW}${REPORT}${RESET}";;
   ANY)
-  ERROR_LEVEL="WARN"
+  ERROR_LEVEL="${YELLOW}WARN${RESET}"
   WARN_COUNT=$((WARN_COUNT+1))
-  echo "${ERROR_LEVEL}: ${RECORD_TYPE} - differs - examine results" 
+  echo "${ERROR_LEVEL}: ${RECORD_TYPE} record differs - examine results" 
   echo -e "${YELLOW}${REPORT}${RESET}";;
   A)
-  ERROR_LEVEL="ERROR"
+  ERROR_LEVEL="${RED}ERROR${RESET}"
   ERROR_COUNT=$((ERROR_COUNT+1))
-  echo "${RECORD_TYPE} - differs"
+  echo "${ERROR_LEVEL}: ${RECORD_TYPE} record differs"
   echo -e "${RED}${REPORT}${RESET}";;
   MX)
-  ERROR_LEVEL="ERROR"
+  ERROR_LEVEL="${RED}ERROR${RESET}"
   ERROR_COUNT=$((ERROR_COUNT+1))
-  echo "${ERROR_LEVEL}: ${RECORD_TYPE} - differs"
+  echo "${ERROR_LEVEL}: ${RECORD_TYPE} record differs"
   echo -e "${RED}${REPORT}${RESET}";;
   TXT)
-  ERROR_LEVEL="ERROR"
+  ERROR_LEVEL="${RED}ERROR${RESET}"
   ERROR_COUNT=$((ERROR_COUNT+1))
-  echo "${ERROR_LEVEL}: ${RECORD_TYPE} - differs"
-  echo -e "${RED}${REPORT}${RESET}";;
+  echo "${ERROR_LEVEL}: ${RECORD_TYPE} record differs"
+  echo -e "${REPORT}";;
 esac
 else
-  ERROR_LEVEL="OK"
+  ERROR_LEVEL="${GREEN}OK${RESET}"
   echo "${ERROR_LEVEL}: ${RECORD_TYPE}"
-  echo -e "${GREEN}${REPORT}${RESET}"
+  #echo -e "${REPORT}"
 fi
 done
 
 # Output counts
-echo -e "${RED}ERRORS:${RESET} $ERROR_COUNT\n${YELLOW}WARNINGS:${RESET} $WARN_COUNT"
+echo -e "\n${RED}ERRORS:${RESET} $ERROR_COUNT\n${YELLOW}WARNINGS:${RESET} $WARN_COUNT"
 if [[ $ERROR_COUNT -gt 0 ]]; then
 exit 1
 else
