@@ -30,7 +30,8 @@ RESULT_T1=$(dig $RECORD_TYPE @$T1 $ZONE +short|sort)
 RESULT_T2=$(dig $RECORD_TYPE @$T2 $ZONE +short|sort)
 
 # Make a common report
-REPORT="server: $T1\n\n$RESULT_T1\n\nserver: $T2\n\n$RESULT_T2"
+REPORT="(srv: $T1):\n$RESULT_T1\n\n(srv: $T2):\n$RESULT_T2"
+
 
 # If the results are not equal, disaply a warning, or not depending on type
 # With domain transfers you can expect SOA,NS to be different, ANY also
