@@ -22,7 +22,7 @@ ERROR_COUNT=0
 WARN_COUNT=0
 
 #Start looping through record types
-for RECORD_TYPE in A MX TXT SOA NS ANY
+for RECORD_TYPE in A AAAA CNAME MX TXT SOA NS ANY
 do
 
 # Get the result for this record type from each server
@@ -56,6 +56,16 @@ case "${RECORD_TYPE}" in
   echo "${ERROR_LEVEL}: ${RECORD_TYPE} record differs - examine results" 
   echo -e "${YELLOW}${REPORT}${RESET}";;
   A)
+  ERROR_LEVEL="${RED}ERROR${RESET}"
+  ERROR_COUNT=$((ERROR_COUNT+1))
+  echo "${ERROR_LEVEL}: ${RECORD_TYPE} record differs"
+  echo -e "${RED}${REPORT}${RESET}";;
+  AAAA)
+  ERROR_LEVEL="${RED}ERROR${RESET}"
+  ERROR_COUNT=$((ERROR_COUNT+1))
+  echo "${ERROR_LEVEL}: ${RECORD_TYPE} record differs"
+  echo -e "${RED}${REPORT}${RESET}";;
+  CNAME)
   ERROR_LEVEL="${RED}ERROR${RESET}"
   ERROR_COUNT=$((ERROR_COUNT+1))
   echo "${ERROR_LEVEL}: ${RECORD_TYPE} record differs"
